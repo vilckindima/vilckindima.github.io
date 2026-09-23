@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vilckin Dima</title>
+<meta name="description" content="Vilckin Dima, Evolution X maintainer for the Pixel 9 Pro and Pixel 9 Pro XL. Contacts, source code and donations.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦎</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* Pixel 9 Pro finishes: Hazel surfaces, Rose Quartz accent.
+     The background is reptile scales: every Pixel 9 codename is a reptile. */
+  :root {
+    color-scheme: light dark;
+    --bg: #e3e8dd;
+    --scale: rgba(166, 90, 81, 0.13);
+    --surface: #fbfcf9;
+    --ink: #1c1f1a;
+    --muted: #586052;
+    --line: #d0d6c9;
+    --accent: #a65a51;
+    --accent-fill: #a65a51;
+    --on-accent: #ffffff;
+    --soft: #f2d9d4;
+    --display: "Unbounded", "Trebuchet MS", system-ui, sans-serif;
+    --text: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --code: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171916;
+      --scale: rgba(235, 175, 166, 0.08);
+      --surface: #252821;
+      --ink: #eceee7;
+      --muted: #a3aa9c;
+      --line: #383c34;
+      --accent: #ebafa6;
+      --accent-fill: #e6a79e;
+      --on-accent: #2b1512;
+      --soft: #3a2826;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    min-height: 100%;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 50% 0, transparent 64%, var(--scale) 65%, var(--scale) 71%, transparent 72%),
+      radial-gradient(circle at 50% 0, transparent 64%, var(--scale) 65%, var(--scale) 71%, transparent 72%);
+    background-size: 56px 28px;
+    background-position: 0 0, 28px 14px;
+  }
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--text);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.1rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  }
+  a { color: var(--accent); text-underline-offset: 0.18em; }
+  :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; }
+
+  /* Top bar */
+  .bar { display: flex; justify-content: space-between; align-items: center; }
+  .lang {
+    display: inline-flex; padding: 4px; gap: 2px;
+    background: var(--surface); border-radius: 999px;
+  }
+  .lang button {
+    font: 500 0.875rem/1 var(--text); color: var(--muted);
+    background: none; border: 0; border-radius: 999px;
+    padding: 0.55rem 0.8rem; cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--accent-fill); color: var(--on-accent); }
+  .share {
+    width: 2.75rem; height: 2.75rem; display: grid; place-items: center;
+    background: var(--surface); color: var(--ink);
+    border: 0; border-radius: 50%; cursor: pointer;
+  }
+
+  /* Profile */
+  .profile { text-align: center; padding: 2.25rem 0 2rem; }
+  .avatar {
+    width: 7rem; height: 7rem; margin: 0 auto 1.1rem;
+    border-radius: 50%;
+    border: 4px solid var(--surface);
+    background: var(--accent-fill); color: var(--on-accent);
+    display: grid; place-items: center; overflow: hidden;
+    font: 700 2.1rem/1 var(--display); letter-spacing: -0.03em;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  h1 {
+    font: 700 clamp(1.9rem, 8vw, 2.4rem)/1.1 var(--display);
+    letter-spacing: -0.025em; margin: 0;
+  }
+
+  /* The stack of buttons */
+  .stack { display: flex; flex-direction: column; gap: 0.75rem; }
+  .item {
+    display: block;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  a.item, .item > summary {
+    min-height: 3.75rem;
+    padding: 0.85rem 3rem;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-weight: 600; font-size: 1.0625rem;
+    cursor: pointer;
+  }
+  a.item:hover, .item:hover { border-color: var(--accent); }
+  .item > summary { list-style: none; position: relative; border-radius: 16px; }
+  .item > summary::-webkit-details-marker { display: none; }
+  .item > summary::after {
+    content: ""; position: absolute; right: 1.25rem; top: 50%;
+    width: 0.55rem; height: 0.55rem; margin-top: -0.4rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    opacity: 0.6; transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  .item[open] > summary::after { transform: rotate(225deg); margin-top: -0.1rem; }
+  .item[open] { border-color: var(--accent); }
+
+  /* Donate is the one filled button */
+  .donate { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+  .donate[open] { background: var(--surface); border-color: var(--accent); color: var(--ink); }
+  .donate[open] > summary { color: var(--accent); }
+
+  /* Expanded content */
+  .panel { padding: 0.1rem 1.25rem 1.35rem; text-align: left; }
+  .note { margin: 0 0 1rem; padding: 0.8rem 0.95rem; border-radius: 12px; background: var(--soft); font-size: 0.9375rem; }
+  .coin { padding: 0.75rem 0; border-top: 1px solid var(--line); }
+  .coin:last-child { border-bottom: 1px solid var(--line); }
+  .coin-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.6rem; margin-bottom: 0.45rem; }
+  .coin-head strong { font-size: 1.0625rem; }
+  .net { color: var(--muted); font-size: 0.9rem; }
+  .addr {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem;
+    padding: 0.7rem 0.85rem; background: var(--bg); border-radius: 12px;
+  }
+  .addr code { font-family: var(--code); font-size: 0.8rem; word-break: break-all; flex: 1 1 14rem; }
+  .copy {
+    font: 500 0.875rem/1 var(--text); color: var(--ink);
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 0.45rem 0.9rem; cursor: pointer;
+  }
+  .pay { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+  .pay:empty { display: none; }
+  .btn {
+    display: block; text-align: center;
+    padding: 0.8rem 1rem; border-radius: 14px;
+    background: var(--accent-fill); color: var(--on-accent);
+    font-weight: 600; text-decoration: none;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .src { list-style: none; margin: 0; padding: 0; }
+  .src li { padding: 0.6rem 0; border-top: 1px solid var(--line); }
+  .src li:last-child { border-bottom: 1px solid var(--line); }
+  .src a { font-weight: 600; }
+  .src span { display: block; color: var(--muted); font-size: 0.9rem; }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding-top: 2.25rem; }
+  footer p { margin: 0 auto; max-width: 28rem; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    background: var(--ink); color: var(--bg);
+    padding: 0.65rem 1.1rem; border-radius: 999px; font-weight: 500;
+    opacity: 0; pointer-events: none; transition: opacity 200ms ease;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .profile { animation: rise 650ms cubic-bezier(.2,.7,.2,1) both; }
+    .item[open] > .panel { animation: open 220ms ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-setlang="en" aria-pressed="true">EN</button>
+      <button type="button" data-setlang="ru" aria-pressed="false">RU</button>
+    </div>
+    <button type="button" class="share" data-i18n-label="share" aria-label="Share this page">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <div class="profile">
+      <div class="avatar" id="avatar" aria-hidden="true">VD</div>
+      <h1>Vilckin Dima</h1>
+    </div>
+
+    <nav class="stack" aria-label="Links">
+      <details class="item donate" id="donate">
+        <summary><span data-i18n="donate">Donate</span></summary>
+        <div class="panel">
+          <p class="note" id="coins-note" data-i18n="coins_note">Send only on the network shown next to each coin. A transfer on a different network cannot be recovered.</p>
+          <div id="coins"></div>
+          <div class="pay" id="pay"></div>
+        </div>
+      </details>
+
+      <a class="item" data-link="telegram">Telegram</a>
+      <a class="item" data-link="forum" data-i18n="forum">Forum thread</a>
+      <a class="item" data-link="github">GitHub</a>
+
+      <details class="item">
+        <summary><span data-i18n="source">Source code</span></summary>
+        <div class="panel">
+          <ul class="src">
+            <li><a data-link="trees" data-i18n="src_trees">Device trees</a><span data-i18n="src_trees_d">caimito and zumapro, based on LineageOS 24.0</span></li>
+            <li><a data-link="kernel" data-i18n="src_kernel">Kernel changes</a><span data-i18n="src_kernel_d">ReSukiSU and SUSFS on the 6.1 GKI kernel</span></li>
+            <li><a data-link="evox">Evolution X</a><span data-i18n="src_evox_d">The ROM my builds are made from</span></li>
+          </ul>
+        </div>
+      </details>
+    </nav>
+  </main>
+
+  <footer>
+    <p data-i18n="affil">Not affiliated with Google or the Evolution X team.</p>
+  </footer>
+</div>
+<div class="toast" role="status" aria-live="polite"></div>
+
+<script>
+  /* ============================================================
+     Edit this block. Empty values ("") are hidden automatically.
+     The Donate button appears once at least one address or link
+     below is filled in.
+     Put only RECEIVING addresses here. Never a seed phrase or
+     a private key: this page is public.
+     ============================================================ */
+  const CONFIG = {
+    avatar: "",       // a photo next to index.html, e.g. "avatar.jpg"; empty shows your initials
+    links: {
+      telegram: "https://t.me/Sevenhundredfifteen",   // e.g. https://t.me/your_name
+      forum:    "",   // your XDA or 4PDA thread
+      github:   "https://github.com/vilckindima",
+      trees:    "https://github.com/vilckindima/evo-komodo-cnb",
+      kernel:   "",   // once created, e.g. https://github.com/vilckindima/evo-caimito-kernel
+      evox:     "https://github.com/Evolution-X"
+    },
+    donate: {
+      crypto: [
+        { name: "USDT",     network: "TRC-20 (Tron)",     address: "TMjy2XZmBVLAhZ4LFESkxPCU38gdb5LbwN" },
+        { name: "TON",      network: "TON",               address: "" },
+        { name: "Bitcoin",  network: "Bitcoin",           address: "" },
+        { name: "Ethereum", network: "Ethereum (ERC-20)", address: "" }
+      ],
+      links: [
+        // other ways to donate, e.g. { name: "Boosty", url: "https://boosty.to/your_name" }
+      ]
+    }
+  };
+
+  const T = {
+    en: {
+      share: "Share this page", link_copied: "Link copied",
+      donate: "Donate",
+      coins_note: "Send only on the network shown next to each coin. A transfer on a different network cannot be recovered.",
+      copy: "Copy", copied: "Copied", addr_copied: "Address copied",
+      forum: "Forum thread", source: "Source code",
+      src_trees: "Device trees", src_trees_d: "caimito and zumapro, based on LineageOS 24.0",
+      src_kernel: "Kernel changes", src_kernel_d: "ReSukiSU and SUSFS on the 6.1 GKI kernel",
+      src_evox_d: "The ROM my builds are made from",
+      affil: "Not affiliated with Google or the Evolution X team."
+    },
+    ru: {
+      share: "Поделиться страницей", link_copied: "Ссылка скопирована",
+      donate: "Поддержать",
+      coins_note: "Отправляйте только в той сети, что указана рядом с монетой. Перевод в другой сети вернуть невозможно.",
+      copy: "Копировать", copied: "Скопировано", addr_copied: "Адрес скопирован",
+      forum: "Тема на форуме", source: "Исходный код",
+      src_trees: "Деревья устройств", src_trees_d: "caimito и zumapro на основе LineageOS 24.0",
+      src_kernel: "Изменения ядра", src_kernel_d: "ReSukiSU и SUSFS на ядре GKI 6.1",
+      src_evox_d: "Прошивка, из которой сделаны мои сборки",
+      affil: "Не связано с Google или командой Evolution X."
+    }
+  };
+
+  let lang = "en";
+  const toast = document.querySelector(".toast");
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast.t);
+    showToast.t = setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  async function copyText(text, btn) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = el("textarea"); ta.value = text; document.body.append(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e2) {}
+      ta.remove();
+    }
+    btn.textContent = T[lang].copied;
+    showToast(T[lang].addr_copied);
+    setTimeout(() => { btn.textContent = T[lang].copy; }, 1600);
+  }
+
+  function applyConfig() {
+    if (CONFIG.avatar) {
+      const av = document.getElementById("avatar");
+      av.textContent = "";
+      const img = el("img"); img.src = CONFIG.avatar; img.alt = "";
+      av.append(img);
+    }
+    document.querySelectorAll("[data-link]").forEach(a => {
+      const url = CONFIG.links[a.dataset.link];
+      const target = a.closest(".src li") || a;
+      if (url) { a.href = url; a.rel = "noopener"; target.hidden = false; }
+      else { target.hidden = true; }
+    });
+
+    const coins = CONFIG.donate.crypto.filter(c => c.address && c.address.trim());
+    const pays = CONFIG.donate.links.filter(l => l.url && l.url.trim());
+    const coinsBox = document.getElementById("coins");
+    const payBox = document.getElementById("pay");
+    coins.forEach(c => {
+      const row = el("div", "coin");
+      const head = el("div", "coin-head");
+      head.append(el("strong", null, c.name));
+      if (c.network && c.network !== c.name) head.append(el("span", "net", c.network));
+      const addr = el("div", "addr");
+      const btn = el("button", "copy", T[lang].copy);
+      btn.type = "button"; btn.dataset.i18n = "copy";
+      btn.addEventListener("click", () => copyText(c.address.trim(), btn));
+      addr.append(el("code", null, c.address.trim()), btn);
+      row.append(head, addr);
+      coinsBox.append(row);
+    });
+    pays.forEach(p => {
+      const a = el("a", "btn", p.name);
+      a.href = p.url; a.rel = "noopener";
+      payBox.append(a);
+    });
+    document.getElementById("coins-note").hidden = coins.length === 0;
+    document.getElementById("donate").hidden = coins.length === 0 && pays.length === 0;
+  }
+
+  function setLang(next) {
+    lang = T[next] ? next : "en";
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(e => {
+      const s = T[lang][e.dataset.i18n];
+      if (s) e.textContent = s;
+    });
+    document.querySelectorAll("[data-i18n-label]").forEach(e => {
+      e.setAttribute("aria-label", T[lang][e.dataset.i18nLabel]);
+    });
+    document.querySelectorAll("[data-setlang]").forEach(b => {
+      b.setAttribute("aria-pressed", String(b.dataset.setlang === lang));
+    });
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+
+  const panels = document.querySelectorAll("details.item");
+  panels.forEach(d => d.addEventListener("toggle", () => {
+    if (d.open) panels.forEach(o => { if (o !== d) o.open = false; });
+  }));
+
+  document.querySelectorAll("[data-setlang]").forEach(b => {
+    b.addEventListener("click", () => setLang(b.dataset.setlang));
+  });
+
+  document.querySelector(".share").addEventListener("click", async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: document.title, url: location.href }); } catch (e) {}
+      return;
+    }
+    try { await navigator.clipboard.writeText(location.href); showToast(T[lang].link_copied); } catch (e) {}
+  });
+
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) {}
+  applyConfig();
+  setLang(saved || ((navigator.language || "").toLowerCase().startsWith("ru") ? "ru" : "en"));
+</script>
+</body>
+</html>
